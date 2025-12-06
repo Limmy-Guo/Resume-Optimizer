@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         max_tokens: 4000,
         messages: [{
           role: 'user',
-          content: `You are an expert resume optimizer and career coach. I need you to improve my resume to better match a specific job description.
+             content: `You are an expert resume optimizer and career coach. I need you to improve my resume to better match a specific job description.
 
 **Job Description:**
 ${jobDescription}
@@ -50,12 +50,24 @@ Please analyze the job description and optimize my resume by:
 1. Highlighting relevant skills and experiences that match the job requirements
 2. Using keywords from the job description naturally throughout the resume
 3. Restructuring bullet points to emphasize impact and achievements relevant to this role
-4. Maintaining the original format and structure as much as possible
-5. Keeping all factual information accurate - do not invent experiences
+4. Keeping all factual information accurate - do not invent experiences
 
-Provide the improved resume in a clean, professional format. Focus on making the resume ATS-friendly and compelling to hiring managers for this specific role.`
-        }]
-      })
+CRITICAL FORMATTING INSTRUCTIONS:
+- Maintain the EXACT original formatting style of the resume
+- Use bullet points (•) exactly as they appear in the original resume
+- Do NOT use asterisks (*), dashes (-), or any other symbols for bullet points
+- Do NOT convert to Markdown format
+- Preserve all spacing, line breaks, and indentation from the original
+- Keep the same section headers and structure
+
+IMPORTANT - KEYWORD HIGHLIGHTING:
+- Wrap ONLY the newly added ATS keywords (words taken from the job description that were not in the original resume) with [[KEYWORD: text ]]
+- For example: "Implemented [[KEYWORD: agile methodologies ]] to improve team efficiency"
+- Only mark keywords that are NEW additions from the job description
+- Do not mark words that were already in the original resume
+- Be precise - only mark the exact keyword phrase, not surrounding words
+
+Provide the improved resume with keyword markers so users can identify which terms are critical ATS keywords that should not be deleted.`
     });
 
     if (!response.ok) {
