@@ -21,7 +21,7 @@ I built this **MVP (Minimum Viable Product)** to solve that pain point. By lever
 ## 🛠️ Tech Stack
 
 * **Frontend:** HTML/CSS/JavaScript (Clean & Responsive UI)
-* **AI Engine:** Anthropic Claude API (Claude 3.5 Sonnet)
+* **AI Engine:** Anthropic Claude API (Claude 4.5 Sonnet)
 * **Deployment:** Vercel (Serverless Functions)
 * **Version Control:** Git & GitHub
 
@@ -35,7 +35,7 @@ I built this **MVP (Minimum Viable Product)** to solve that pain point. By lever
 
 **Hanrui Guo** *Darden MBA Class of 2026 | Ex-AWS Product Marketing | Ex-Kearney Consultant*
 
-I am a Product Manager and Strategist passionate about building tools that solve real-world efficiency problems. I built this project to demonstrate the practical application of GenAI in workflow automation.
+I am an MBA student and Strategist passionate about building tools that solve real-world efficiency problems. I built this project to demonstrate the practical application of GenAI in workflow automation.
 
 * [**LinkedIn**](https://www.linkedin.com/in/hanrui-guo/)
 * [**Portfolio**](https://resume-optimizer-blond-one.vercel.app/)
