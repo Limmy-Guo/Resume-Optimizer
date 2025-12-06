@@ -47,10 +47,12 @@ ${jobDescription}
 ${currentResume}
 
 Please analyze the job description and optimize my resume by:
-1. Highlighting relevant skills and experiences that match the job requirements
-2. Using keywords from the job description naturally throughout the resume
-3. Restructuring bullet points to emphasize impact and achievements relevant to this role
-4. Keeping all factual information accurate - do not invent experiences
+1. **Rewrite bullet points** to better highlight relevant skills, experiences, and achievements that match the job requirements
+2. Use strong action verbs and quantify results wherever possible
+3. Incorporate keywords from the job description naturally throughout the resume
+4. Emphasize impact and outcomes that are relevant to this specific role
+5. Make the language more compelling and ATS-friendly
+6. Keep all factual information accurate - do not invent experiences or exaggerate numbers
 
 CRITICAL FORMATTING INSTRUCTIONS:
 - Maintain the EXACT original formatting style of the resume
@@ -61,13 +63,14 @@ CRITICAL FORMATTING INSTRUCTIONS:
 - Keep the same section headers and structure
 
 IMPORTANT - KEYWORD HIGHLIGHTING:
-- Wrap ONLY the newly added ATS keywords (words taken from the job description that were not in the original resume) with [[KEYWORD: text ]]
-- For example: "Implemented [[KEYWORD: agile methodologies ]] to improve team efficiency"
-- Only mark keywords that are NEW additions from the job description
+- After optimizing the content, wrap ONLY the newly added ATS keywords (important terms taken from the job description that were not in the original resume) with [[KEYWORD: text ]]
+- For example: "Spearheaded [[KEYWORD: agile transformation ]] initiative that improved team velocity by 40%"
+- Only mark NEW keywords that you added from the job description
 - Do not mark words that were already in the original resume
-- Be precise - only mark the exact keyword phrase, not surrounding words
+- Be selective - only mark the most important keywords (skills, technologies, methodologies, industry terms)
+- The goal is to help users see which critical terms should be preserved
 
-Provide the improved resume with keyword markers so users can identify which terms are critical ATS keywords that should not be deleted.`
+Focus on creating a compelling, achievement-oriented resume that will pass ATS systems and impress hiring managers, while highlighting the key terms that make it ATS-friendly.`
         }]
       })
     });
