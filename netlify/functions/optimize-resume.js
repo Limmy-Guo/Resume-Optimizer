@@ -1,5 +1,3 @@
-javascriptconst Anthropic = require('@anthropic-ai/sdk');
-
 exports.handler = async (event, context) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -37,18 +35,24 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: 'API key not configured' })
+        body: JSON.stringify({ error: 'API key not configured in Netlify environment variables' })
       };
     }
 
-    const anthropic = new Anthropic({ apiKey: apiKey });
-
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
-      messages: [{
-        role: 'user',
-        content: `You are an expert resume optimizer and career coach. I need you to improve my resume to better match a specific job description.
+    // 直接使用 fetch 调用 API
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        messages: [{
+          role: 'user',
+          content: `You are an expert resume optimizer and career coach. I need you to improve my resume to better match a specific job description.
 
 **Job Description:**
 ${jobDescription}
@@ -64,10 +68,17 @@ Please analyze the job description and optimize my resume by:
 5. Keeping all factual information accurate - do not invent experiences
 
 Provide the improved resume in a clean, professional format. Focus on making the resume ATS-friendly and compelling to hiring managers for this specific role.`
-      }]
+        }]
+      })
     });
 
-    const improvedResume = message.content[0].text;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'API request failed');
+    }
+
+    const data = await response.json();
+    const improvedResume = data.content[0].text;
 
     return {
       statusCode: 200,
