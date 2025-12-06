@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         max_tokens: 4000,
         messages: [{
           role: 'user',
-             content: `You are an expert resume optimizer and career coach. I need you to improve my resume to better match a specific job description.
+          content: `You are an expert resume optimizer and career coach. I need you to improve my resume to better match a specific job description.
 
 **Job Description:**
 ${jobDescription}
@@ -68,6 +68,8 @@ IMPORTANT - KEYWORD HIGHLIGHTING:
 - Be precise - only mark the exact keyword phrase, not surrounding words
 
 Provide the improved resume with keyword markers so users can identify which terms are critical ATS keywords that should not be deleted.`
+        }]
+      })
     });
 
     if (!response.ok) {
