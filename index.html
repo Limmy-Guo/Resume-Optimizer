@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <span class="text-5xl">✨</span>
+                <h1 class="text-4xl font-bold text-gray-900">Resume Optimizer</h1>
+            </div>
+            <p class="text-lg text-gray-600">Powered by Claude AI</p>
+        </div>
+
+        <!-- API Key Input (shown on first use) -->
+        <div id="apiKeySection" class="max-w-md mx-auto mb-8 bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4 text-center">Enter Your API Key</h2>
+            <p class="text-sm text-gray-600 mb-4">Your API key is stored locally in your browser.</p>
+            <input 
+                type="password" 
+                id="apiKeyInput" 
+                placeholder="sk-ant-api03-..."
+                class="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-blue-500"
+            />
+            <button 
+                onclick="saveApiKey()" 
+                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700"
+            >
+                Save & Start
+            </button>
+            <div class="mt-4 text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded p-3">
+                <strong>Get API key:</strong> Visit console.anthropic.com/settings/keys
+            </div>
+        </div>
+
+        <!-- Main App (hidden until API key is set) -->
+        <div id="mainApp" style="display: none;">
+            <div class="mb-4 text-center">
+                <button onclick="clearApiKey()" class="text-sm text-gray-500 hover:underline">
+                    🔐 Change API Key
+                </button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Job Description -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">💼</span>
+                        <label class="text-lg font-semibold">Job Description</label>
+                    </div>
+                    <textarea 
+                        id="jobDescription"
+                        placeholder="Paste the job description here..."
+                        class="w-full h-80 p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
+                    ></textarea>
+                    <p class="text-sm text-gray-500 mt-2">
+                        <span id="jdCount">0</span> characters
+                    </p>
+                </div>
+
+                <!-- Current Resume -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">📄</span>
+                        <label class="text-lg font-semibold">Current Resume</label>
+                    </div>
+                    <textarea 
+                        id="currentResume"
+                        placeholder="Paste your resume here..."
+                        class="w-full h-80 p-4 border rounded-lg focus:ring-2 focus:ring-purple-500 resize-none"
+                    ></textarea>
+                    <p class="text-sm text-gray-500 mt-2">
+                        <span id="resumeCount">0</span> characters
+                    </p>
+                </div>
+            </div>
+
+            <!-- Optimize Button -->
+            <div class="text-center mb-8">
+                <button 
+                    onclick="optimizeResume()" 
+                    id="optimizeBtn"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                >
+                    ✨ Optimize Resume
+                </button>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p class="text-red-700"></p>
+            </div>
+
+            <!-- Loading Message -->
+            <div id="loadingMessage" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-blue-700">✨ Optimizing your resume... This may take 10-30 seconds.</p>
+            </div>
+
+            <!-- Result -->
+            <div id="resultSection" class="hidden bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">✅</span>
+                        <label class="text-lg font-semibold">Improved Resume</label>
+                    </div>
+                    <button 
+                        onclick="copyResult()"
+                        class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
+                    >
+                        📋 Copy
+                    </button>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-6 border">
+                    <pre id="resultText" class="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character counters
+        document.getElementById('jobDescription').addEventListener('input', (e) => {
+            document.getElementById('jdCount').textContent = e.target.value.length;
+        });
+        document.getElementById('currentResume').addEventListener('input', (e) => {
+            document.getElementById('resumeCount').textContent = e.target.value.length;
+        });
+
+        // Check if API key exists
+        window.onload = () => {
+            const apiKey = localStorage.getItem('anthropic_api_key');
+            if (apiKey) {
+                document.getElementById('apiKeySection').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+            }
+        };
+
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey.startsWith('sk-ant-')) {
+                alert('Please enter a valid API key (starts with sk-ant-)');
+                return;
+            }
+            localStorage.setItem('anthropic_api_key', apiKey);
+            document.getElementById('apiKeySection').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        function clearApiKey() {
+            if (confirm('Clear API key and start over?')) {
+                localStorage.removeItem('anthropic_api_key');
+                location.reload();
+            }
+        }
+
+        async function optimizeResume() {
+            const jobDescription = document.getElementById('jobDescription').value.trim();
+            const currentResume = document.getElementById('currentResume').value.trim();
+            const apiKey = localStorage.getItem('anthropic_api_key');
+
+            if (!jobDescription || !currentResume) {
+                showError('Please fill in both fields');
+                return;
+            }
+
+            // Hide previous results
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('loadingMessage').classList.remove('hidden');
+            document.getElementById('optimizeBtn').disabled = true;
+            document.getElementById('optimizeBtn').textContent = '⏳ Optimizing...';
+
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01',
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 4000,
+                        messages: [{
+                            role: 'user',
+                            content: `You are an expert resume optimizer. Improve this resume to match the job description.
+
+**Job Description:**
+${jobDescription}
+
+**Current Resume:**
+${currentResume}
+
+Optimize by:
+1. Highlighting relevant skills matching job requirements
+2. Using keywords from the job description
+3. Emphasizing achievements relevant to this role
+4. Maintaining original structure
+5. Keeping all information accurate
+
+Provide the improved resume in clean, professional format.`
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || 'API request failed');
+                }
+
+                const data = await response.json();
+                const improvedResume = data.content[0].text;
+
+                document.getElementById('resultText').textContent = improvedResume;
+                document.getElementById('resultSection').classList.remove('hidden');
+                document.getElementById('loadingMessage').classList.add('hidden');
+
+            } catch (error) {
+                showError(`Error: ${error.message}. This may be due to browser security restrictions. Consider deploying with a backend server.`);
+                document.getElementById('loadingMessage').classList.add('hidden');
+            } finally {
+                document.getElementById('optimizeBtn').disabled = false;
+                document.getElementById('optimizeBtn').textContent = '✨ Optimize Resume';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.querySelector('p').textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function copyResult() {
+            const text = document.getElementById('resultText').textContent;
+            navigator.clipboard.writeText(text);
+            alert('Copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
