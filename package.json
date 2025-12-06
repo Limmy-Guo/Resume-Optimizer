@@ -1,8 +1,5 @@
-json{
-  "name": "resume-optimizer-netlify",
+{
+  "name": "resume-optimizer",
   "version": "1.0.0",
-  "description": "AI-powered resume optimizer",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1"
-  }
+  "private": true
 }
